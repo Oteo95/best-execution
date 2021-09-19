@@ -1,0 +1,14 @@
+version: '3'
+services:
+  best-execution:
+    environment:
+      - PYTHONPATH=/home/app/src
+    build: 
+      context: ..
+      dockerfile: ./dockerfiles/Dockerfile
+    volumes:
+      - ..:/home/app:cached
+    runtime: nvidia
+    
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity 
