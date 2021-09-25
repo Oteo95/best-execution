@@ -89,6 +89,10 @@ class BestExecutionEnv:
         self.reward_hist = []
         self.price_hist = []
         self.vol_hist = []
+        self.action_hist = []
+        self.price = None
+        self.vol = None
+        self.obs_hist = []
 
     def _detect_num_feat(self):
         """Detecta el número de variables del estado.
@@ -119,6 +123,8 @@ class BestExecutionEnv:
         self.reward_hist = []
         self.price_hist = []
         self.vol_hist = []
+        self.obs_hist = []
+        self.action_hist = []
 
     def _generate_episode_params(self):
         """Se determinan las características de la orden a ejecutar.
@@ -191,8 +197,10 @@ class BestExecutionEnv:
         self._reset_env_episode_params()
         self._generate_episode()
         self._compute_episode_market_feat()
+        obs = self.observation_builder()
+        self.obs_hist.append(obs)
 
-        return self.observation_builder()
+        return obs
 
     def observation_builder(self) -> np.array:
         """ Función para la construcción de las observaciones del estado.
@@ -206,7 +214,6 @@ class BestExecutionEnv:
         time_left = (self.episode_bins - self.state_pos) / self.episode_bins
         vol_left = 1 - (self.exec_vol / self.vol_care)
         obs = np.array([time_left, vol_left])
-
         return obs
 
     def _compute_episode_market_feat(self) -> Tuple[float, float]:
@@ -237,7 +244,7 @@ class BestExecutionEnv:
         algo_vwap = np.sum(p_arr * v_arr) / np.sum(v_arr)
         return algo_vwap
 
-    def _compute_reward(self, price: float, vol: float) -> float:
+    def _compute_reward(self) -> float:
         """Función de diseño de los rewards y penalizaciónes que
         recibe el algoritmo al tomar las acciones.
         --------------------------------------------------------
@@ -246,13 +253,13 @@ class BestExecutionEnv:
               el precio de la acción tomada, dividido entre episode_vwap.
         """
         # TODO: Establece y devuelve un reward cuando vol == 0
-        if vol == 0:
+        if self.vol == 0:
             reward = 0
             return reward
         # TODO: Calcula y devuelve el reward cuando vol > 0
         # Clue: Utiliza episode_vwap y price para la reward por defecto
         # Opcional: Utiliza el self y elimina los parámetros de la función
-        reward = (self.episode_vwap - price) / self.episode_vwap
+        reward = (self.episode_vwap - self.price) / self.episode_vwap
         return reward
 
     def _compute_stop_conditions(self) -> Tuple[bool, bool]:
@@ -276,34 +283,36 @@ class BestExecutionEnv:
         """Acción agresiva de compra de un título a precio de episode['ask1'].
         Devolvemos el reward asociado a esa acción.
         """
+        self.action_hist.append(1)
         # TODO: obtén el precio de la accion agresiva (ask1) en el state_pos
-        price = self.episode["ask1"].values[self.state_pos]
+        self.price = self.episode["ask1"].values[self.state_pos]
         # TODO: guarda price en price_hist, añade 1 a exec_vol y  a vol_hist
-        self.price_hist.append(price)
-        exec_vol = 1
-        self.exec_vol += exec_vol
-        self.vol_hist.append(exec_vol)
+        self.price_hist.append(self.price)
+        self.vol = 1
+        self.exec_vol += self.vol
+        self.vol_hist.append(self.vol)
 
         # TODO: utiliza la función apropiada para calcula el algo_vwap
         algo_vwap = self._compute_algo_vwap()
         # guarda el algo_vwap en algo_vwap_hist
         self.algo_vwap_hist.append(algo_vwap)
         # TODO: calcula el reward utilizando la función apropiada
-        reward = self._compute_reward(price, exec_vol)
+        reward = self._compute_reward()
         return reward
 
     def _do_nothing(self) -> float:
         """No hacer nada y devolvemos el reward asociado a la acción
         """
+        self.action_hist.append(0)
         # TODO: Repite el proceso de _agg_action
         # Clue: Precio y volumen ejecutado = 0
-        price = 0
-        exec_vol = 0
-        self.price_hist.append(price)
-        self.vol_hist.append(exec_vol)
+        self.price = 0
+        self.vol = 0
+        self.price_hist.append(self.price)
+        self.vol_hist.append(self.vol)
         algo_vwap = self.algo_vwap_hist[-1]
         self.algo_vwap_hist.append(algo_vwap)
-        reward = self._compute_reward(price, exec_vol)
+        reward = self._compute_reward()
 
         return reward
 
@@ -363,6 +372,7 @@ class BestExecutionEnv:
             return None, reward, done, {}
 
         observation = self.observation_builder()
+        self.obs_hist.append(observation)
 
         return np.array(observation), reward, done, {}
 

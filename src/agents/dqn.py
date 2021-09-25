@@ -1,8 +1,9 @@
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
-
+import tensorflow_recommenders as tfrs
 from collections import deque
 
 
@@ -41,12 +42,19 @@ class DDQNAgent():
         self._trainable = trainable
 
     def network(self):
-        inp = Input(shape=(self.n_features, ))
-        capa = Dense(int(self.hidden_neurons), activation="relu")(inp)
-        capa = Dense(int(self.hidden_neurons), activation="relu")(capa)
-        out = Dense(self.na, activation="linear")(capa)
 
-        return Model(inp, out)
+        inp = Input(shape=(self.n_features,), name='index')
+        x = Dense(self.hidden_neurons, activation="elu")(inp)
+        x = Dense(self.hidden_neurons, activation="elu")(x)
+
+        x1 = tfrs.layers.dcn.Cross()(inp, inp)
+        x2 = tfrs.layers.dcn.Cross()(inp, x1)
+        x3 = Dense(self.hidden_neurons, activation="elu")(x2)
+
+        x4 = tf.keras.layers.Concatenate(axis=-1)([x3, x])
+        logits = Dense(self.na, activation="linear")(x4)
+
+        return Model(inp, logits)
 
     def experience(self, s, a, r, s1, done=False):
         if done:
