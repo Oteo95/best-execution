@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.8
 
 COPY dockerfiles/requirements.txt /tmp/
 
@@ -20,3 +20,4 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
+ENV PYTHONPATH "./src"

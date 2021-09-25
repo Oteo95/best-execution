@@ -10,10 +10,40 @@
 	"dockerFile": "../dockerfiles/Dockerfile",
 
 	// Set *default* container specific settings.json values on container create.
-	"settings": {},
-	
+	"settings":  {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/local/bin/python",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+		"python.linting.flake8Path": "/usr/local/bin/flake8",
+		"python.linting.flake8Enabled": true,
+		"python.testing.pytestPath": "/usr/local/bin/pytest",
+		"python.testing.pytestEnabled": true,
+		"python.testing.unittestEnabled": false,
+		"python.testing.autoTestDiscoverOnSaveEnabled": true,
+		"autoDocstring.docstringFormat": "numpy",	
+		"files.eol": "\n",
+		"files.exclude": {
+			".pytest_cache": true,
+			"*/**/__pycache__": true,
+			"*/**/.ipynb_checkpoints": true,
+			"*.pyc": true,
+		},
+		"python.testing.pytestArgs": [
+			"-s",
+			"--disable-pytest-warnings",
+			"./src/webapi/tests",
+			"./src/ca/tests",
+	   ],
+	},
+
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": []
+	"extensions": [
+		"eamodio.gitlens",
+		"njpwerner.autodocstring",
+		"ms-python.python"
+	],
+
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
