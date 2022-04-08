@@ -1,6 +1,5 @@
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.layers import Dense, Input, Concatenate
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 import tensorflow_recommenders as tfrs
@@ -51,7 +50,7 @@ class DDQNAgent():
         x2 = tfrs.layers.dcn.Cross()(inp, x1)
         x3 = Dense(self.hidden_neurons, activation="elu")(x2)
 
-        x4 = tf.keras.layers.Concatenate(axis=-1)([x3, x])
+        x4 = Concatenate(axis=-1)([x3, x])
         logits = Dense(self.na, activation="linear")(x4)
 
         return Model(inp, logits)

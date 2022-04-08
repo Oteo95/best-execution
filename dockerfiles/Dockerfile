@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM tensorflow/tensorflow:latest
 
 COPY dockerfiles/requirements.txt /tmp/
 
@@ -6,7 +6,7 @@ RUN set -ex; \
     pip3 --no-cache-dir install --requirement /tmp/requirements.txt
 
 ARG USERNAME=best_exec_agent
-ARG USER_UID=1000
+ARG USER_UID=8989
 ARG USER_GID=$USER_UID
 
 # Create the user
@@ -20,4 +20,4 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
-ENV PYTHONPATH "./src"
+ENV PYTHONPATH "/workspaces/best-execution/src"

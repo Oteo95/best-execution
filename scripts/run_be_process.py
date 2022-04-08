@@ -17,12 +17,12 @@ hidden_neurons = 240
 """
     Training Params
 """
-nepisodes = 100
+nepisodes = 200
 n_log = 25
 epsilon_decay = (epsilon - min_epsilon) / (nepisodes * 0.95)
 learn_after = batch_size
 
-with open("./data/rep_data.pickle", "rb") as f:
+with open("/workspaces/best-execution/data/san_data.pickle", "rb") as f:
     df = pickle.load(f)
 data = df["train"]
 
@@ -41,9 +41,11 @@ tba = TrainTabularAgent(
     n_log=n_log
 )
 
-tba.fill_buffer()
+tba.fill_buffer("twap")
 tba.run_process(
     epsilon_decay=epsilon_decay,
     min_epsilon=min_epsilon,
     learn_after=learn_after
 )
+
+tba.plot_policy_results(df["test"])
