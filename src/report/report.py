@@ -40,5 +40,5 @@ def plot_results(env, mode="max"):
         color="orange",
         alpha=0.6
     )
-    plt.legend(["algo cumvol", "mkt cumvol", "algo vol ", "mkt vol"])
+    plt.legend(["mkt cumvol", "algo cumvol", "mkt vol", "algo vol "])
     plt.grid(True)
