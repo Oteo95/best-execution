@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  best-exe-devcontainer-python:
+    image: python
+    build:
+      context: ../..
+      dockerfile: ./dockerfiles/devcontainers/python/dockerfile
+    volumes:
+      - ../..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    environment:
+      PYTHONPATH: /workspace/src:/workspace
