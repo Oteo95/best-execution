@@ -5,39 +5,36 @@
 	"service": "best-exe-devcontainer-python",
 
 	"workspaceFolder": "/workspace",
-	"shutdownAction": "none",
-	"settings":  {
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/local/bin/python",
-		"python.linting.enabled": true,
-		"python.linting.pylintEnabled": true,
-		"python.linting.flake8Path": "/usr/local/bin/flake8",
-		"python.linting.flake8Enabled": true,
-		"python.testing.pytestPath": "/usr/local/bin/pytest",
-		"python.testing.pytestEnabled": true,
-		"python.testing.unittestEnabled": false,
-		"python.testing.autoTestDiscoverOnSaveEnabled": true,
-		"autoDocstring.docstringFormat": "numpy",	
-		"files.eol": "\n",
-		"files.exclude": {
-			".pytest_cache": true,
-			"*/**/__pycache__": true,
-			"*/**/.ipynb_checkpoints": true,
-			"*.pyc": true,
-		},
-		"python.testing.pytestArgs": [
-			"-s",
-			"--disable-pytest-warnings",
-			// "./src/webapi/tests",
-			// "./src/tests",
-	   ],
+"customizations": {
+		"vscode": {
+			"settings":  {
+				"terminal.integrated.shell.linux": "/bin/bash",
+				"python.pythonPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.linting.flake8Path": "/usr/local/bin/flake8",
+				"python.linting.flake8Enabled": true,
+				"python.testing.pytestPath": "/usr/local/bin/pytest",
+				"python.testing.pytestEnabled": true,
+				"python.testing.unittestEnabled": false,
+				"python.testing.autoTestDiscoverOnSaveEnabled": true,
+				"autoDocstring.docstringFormat": "numpy",	
+				"files.eol": "\n",
+				"files.exclude": {
+					".pytest_cache": true,
+					"*/**/__pycache__": true,
+					"*/**/.ipynb_checkpoints": true,
+					"*.pyc": true,
+					"*/**/*.egg-info": true,
+					"*/**/.pytest_cache": true
+				},
+			},
+			"extensions": [
+				"eamodio.gitlens",
+				"njpwerner.autodocstring",
+				"ms-python.python"
+			],
+		}
 	},
-
-	"extensions": [
-		"eamodio.gitlens",
-		"njpwerner.autodocstring",
-		"ms-python.python"
-	],
-
 	"remoteUser": "vscode"
 }

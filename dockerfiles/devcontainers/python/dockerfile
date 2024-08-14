@@ -1,11 +1,13 @@
-FROM mcr.microsoft.com/vscode/devcontainers/python:3.8
+FROM jesussanz/best_execution:v1
 
-COPY dockerfiles/devcontainers/python/requirements.txt /tmp/
-RUN set -ex; \
-    pip3 --no-cache-dir install --requirement /tmp/requirements.txt
+# FROM mcr.microsoft.com/vscode/devcontainers/python:3.8
 
-RUN apt-get update -y && \ 
-    apt-get install -y xvfb && \
-    apt-get install -y python3-opengl 
+# COPY dockerfiles/devcontainers/python/requirements.txt /tmp/
+# RUN set -ex; \
+#     pip3 --no-cache-dir install --requirement /tmp/requirements.txt
 
-RUN apt-get install -y swig
+# RUN apt-get update -y && \ 
+#     apt-get install -y xvfb && \
+#     apt-get install -y python3-opengl 
+
+# RUN apt-get install -y swig
