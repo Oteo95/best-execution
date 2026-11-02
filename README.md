@@ -2,6 +2,7 @@
 
 - [Introduction](#introduction)
 - [Motivation of the project](#motivation-of-the-project)
+- [Installation](#installation)
 
 <!-- toc -->
 
@@ -28,3 +29,18 @@ Some students told me that they had skill enough to solve defined RL tasks but t
 ![DQNTWAP](./images/twap_model/twap_reproduction_dqn.png)
 
 ``` Note: The simulator assumes multiple non realistic situations,for example the non market impact. ¡For a more realistic order book simulator to develop RL stay connected! ```
+
+## Installation
+
+There are two ways to set up the environment:
+
+- **Dev Container** (requires Docker): open the repo in VS Code and run *Dev Containers: Reopen in Container*.
+- **Local** (no Docker): create a Python 3.9-3.11 virtual environment (3.11 recommended) and install the repo from its root:
+
+  ```bash
+  python3.11 -m venv .venv         # Windows: py -3.11 -m venv .venv
+  source .venv/bin/activate        # Windows: .venv\Scripts\activate
+  pip install -e .
+  ```
+
+  This installs the pinned dependencies from `setup.py` (prebuilt wheels for Windows, macOS Intel, macOS 12+ on Apple Silicon and Linux; no compiler needed) and makes `src/` importable from any notebook, e.g. `from src.agents.dqn import DDQNAgent`.

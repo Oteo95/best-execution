@@ -31,12 +31,9 @@ class DDQNAgent():
             loss="mse",
             optimizer=Adam(learning_rate=alpha)
         )
-        # Double Deep Q-Learning -> Add an extra model
+        # Double Deep Q-Learning -> Add a frozen copy of the primary model
         self.target_model = self.network()
-        self.target_model.compile(
-            loss="mse",
-            optimizer=Adam(learning_rate=alpha)
-        )
+        self.update_target()
         self._trainable = trainable
 
     def network(self):
@@ -90,10 +87,8 @@ class DDQNAgent():
     def getQ(self, s, a):
         return self.getQs(s)[:, a]
 
-    def switchmodels(self):
-        self.primary_model, self.target_model = (
-            self.target_model, self.primary_model
-        )
+    def update_target(self):
+        self.target_model.set_weights(self.primary_model.get_weights())
 
     def learn(self):
         batch = self.sample()
@@ -103,7 +98,9 @@ class DDQNAgent():
             if experience[3] is not None
         ])
         qs = self.getQs(s_list, self.primary_model)
+        # Primary model selects the best next action...
         qs1 = self.getQs(s1_list, self.primary_model)
+        # ...and target model evaluates it
         q_target = self.getQs(s1_list, self.target_model)
         targets = qs
 
@@ -117,7 +114,5 @@ class DDQNAgent():
                 k += 1
 
         loss = self.primary_model.train_on_batch(s_list, targets)
-
-        self.switchmodels()
 
         return loss
